@@ -11,12 +11,13 @@ Content-Type: application/json
 }
 
 
+
 ###
-post  http://localhost:3008/login
-Content-Type: application/json 
+post http://localhost:3008/login
+Content-Type: application/json
 
 {
     "email":"lbhagya818@gmail.com",
-    "password":"bhagya2023",
-}
+    "password":"bhagya2023"
 
+}

@@ -2,10 +2,9 @@ const { request, response } = require('express');
 const express=require('express')
 const mongoose=require('mongoose')
 const bcrypt = require('bcrypt')
-const jwt=require('jsonwebtoken')
 const cors = require('cors')
 const UserData = require('./model')
-
+const jwt=require('jsonwebtoken')
 
 
 const app = express();
@@ -46,16 +45,17 @@ app.post("/add", async (request,response) =>{
     }
 })
 
-app.post("/login", async(request,response) => {
+app.post("/login", async (request,response) => {
     const  {email,password}=request.body
     try{
-        const dbUserIn = await UserData.findOne({ email: email })
-        if (dbUserIn !== undefined) {
-            const checkPassword = await bcrypt.compare(password, dbUserIn.password);
-            console.log(checkPassword)
+        const userData = await UserData.findOne({ email: email})
+        
+        if (userData !== undefined) {
+            console.log(userData,'l')
+            const checkPassword = await bcrypt.compare(password, userData.password);
             if (checkPassword === true) {
-                const payload = { username: username };
-                const jwtToken = jwt.sign(payload, "SECRET_ID");
+                const payload = { email: email };
+                const jwtToken = jwt.sign(payload, "SECRET_ID", {expiresIn: 3600000} );
                 response.send({ jwtToken });
             } else {
                 response.status(400);
@@ -72,9 +72,32 @@ app.post("/login", async(request,response) => {
 })
 
 
-// app.get('/', (request, response) => {
-//     response.send('hello world...')
-// })
+
+const authenticateToken =  (request, response, next) => {
+    let jwtToken;
+    const authenticateHeader = request.headers["authorization"];
+    console.log(authenticateHeader);
+    if (authenticateHeader !== undefined) {
+        jwtToken = authenticateHeader.split(" ")[1];
+    } else {
+        response.status(401);
+        response.send("Invalid JWT Token");
+    }
+
+    if (jwtToken !== undefined) {
+        jwt.verify(jwtToken, "SECRET_ID", async (error, payload) => {
+            if (error) {
+                response.status(401);
+                response.send("Invalid JWT Token");
+            } else {
+                request.username = payload.username;
+                next();
+            }
+        });
+    }
+};
+
+
 
 app.listen(3008,() =>{
     console.log(' server running.......')
