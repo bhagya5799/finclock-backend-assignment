@@ -1,0 +1,22 @@
+###
+post  http://localhost:3008/add
+Content-Type: application/json
+
+{
+    "userName":"bhagyalaxmi",
+    "email":"lbhagya818@gmail.com",
+    "password":"bhagya2023",
+    "confirmPassword":"bhagya2023",
+    "id":"1"
+}
+
+
+###
+post  http://localhost:3008/login
+Content-Type: application/json 
+
+{
+    "email":"lbhagya818@gmail.com",
+    "password":"bhagya2023",
+}
+
