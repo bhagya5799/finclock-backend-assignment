@@ -51,7 +51,7 @@ app.post("/login", async (request,response) => {
         const userData = await UserData.findOne({ email: email})
         
         if (userData !== undefined) {
-            console.log(userData,'l')
+           
             const checkPassword = await bcrypt.compare(password, userData.password);
             if (checkPassword === true) {
                 const payload = { email: email };
@@ -97,11 +97,6 @@ const authenticateToken =  (request, response, next) => {
     }
 };
 
-
-
-app.listen(3008,() =>{
-    console.log(' server running.......')
-})
-
+app.listen(process.env.PORT || 3008, () => console.log('port running '))
 
 
