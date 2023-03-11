@@ -1,11 +1,10 @@
 const { request, response } = require('express');
-const express=require('express')
+const express= require('express')
 const mongoose=require('mongoose')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
 const UserData = require('./model')
 const jwt=require('jsonwebtoken')
-
 
 const app = express();
 app.use(cors())
@@ -13,7 +12,6 @@ app.use(express.json())
 const mongooseData = mongoose.connect('mongodb+srv://bhagyashree:bhagya5799@cluster0.q2xpdj1.mongodb.net/?retryWrites=true&w=majority').then(
     () => console.log('db connected.....')
 ).catch(err => console.log(err, "DB error running"))
-
 
 
   
@@ -51,7 +49,6 @@ app.post("/login", async (request,response) => {
         const userData = await UserData.findOne({ email: email})
         
         if (userData !== undefined) {
-           
             const checkPassword = await bcrypt.compare(password, userData.password);
             if (checkPassword === true) {
                 const payload = { email: email };
@@ -59,11 +56,11 @@ app.post("/login", async (request,response) => {
                 response.send({ jwtToken });
             } else {
                 response.status(400);
-                response.send("Invalid password");
+                response.send({ msg: "Invalid password" });
             }
         } else {
             response.status(400);
-            response.send("Invalid user");
+            response.send({ msg: "Invalid user" });
         } 
     }
     catch(err){
@@ -81,14 +78,14 @@ const authenticateToken =  (request, response, next) => {
         jwtToken = authenticateHeader.split(" ")[1];
     } else {
         response.status(401);
-        response.send("Invalid JWT Token");
+        response.send({ msg:"Invalid JWT Token" });
     }
 
     if (jwtToken !== undefined) {
         jwt.verify(jwtToken, "SECRET_ID", async (error, payload) => {
             if (error) {
                 response.status(401);
-                response.send("Invalid JWT Token");
+                response.send({ msg: "Invalid JWT Token" });
             } else {
                 request.username = payload.username;
                 next();
