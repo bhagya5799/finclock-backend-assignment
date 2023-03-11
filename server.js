@@ -47,8 +47,9 @@ app.post("/login", async (request,response) => {
     const  {email,password}=request.body
     try{
         const userData = await UserData.findOne({ email: email})
+        console.log(userData)
         
-        if (userData !== undefined) {
+        if (userData!==null) {
             const checkPassword = await bcrypt.compare(password, userData.password);
             if (checkPassword === true) {
                 const payload = { email: email };
@@ -60,7 +61,7 @@ app.post("/login", async (request,response) => {
             }
         } else {
             response.status(400);
-            response.send({ msg: "Invalid user" });
+            response.send({ msg: "Invalid Email" });
         } 
     }
     catch(err){
