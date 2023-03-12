@@ -59,11 +59,11 @@ app.post("/login", async (request,response) => {
                 response.send({ jwtToken });
             } else {
                 response.status(400);
-                response.send({ msg: "Invalid password" });
+                response.send({ msg: "password must be 8 character long" });
             }
         } else {
             response.status(400);
-            response.send({ msg: "Invalid Email" });
+            response.send({ msg: "please enter  a valid mail" });
         } 
     }
     catch(err){
