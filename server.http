@@ -21,3 +21,9 @@ Content-Type: application/json
     "password":"bhagya2023"
 
 }
+
+
+
+###
+get http://localhost:3008/userName
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxiaGFneWE4MThAZ21haWwuY29tIiwiaWF0IjoxNjc4NTUxMTMzLCJleHAiOjE2ODIxNTExMzN9.3KEk1arBX1B7MnVV_z9FWmqrZApPRlv9lHuu6HeWp4U

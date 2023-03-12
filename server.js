@@ -4,7 +4,9 @@ const mongoose=require('mongoose')
 const bcrypt = require('bcrypt')
 const cors = require('cors')
 const UserData = require('./model')
-const jwt=require('jsonwebtoken')
+const jwt=require('jsonwebtoken');
+
+
 
 const app = express();
 app.use(cors())
@@ -70,11 +72,9 @@ app.post("/login", async (request,response) => {
 })
 
 
-
 const authenticateToken =  (request, response, next) => {
     let jwtToken;
     const authenticateHeader = request.headers["authorization"];
-    console.log(authenticateHeader);
     if (authenticateHeader !== undefined) {
         jwtToken = authenticateHeader.split(" ")[1];
     } else {
@@ -88,12 +88,30 @@ const authenticateToken =  (request, response, next) => {
                 response.status(401);
                 response.send({ msg: "Invalid JWT Token" });
             } else {
-                request.username = payload.username;
+                request.email = payload.email;
+                console.log(payload.email)
                 next();
             }
         });
     }
 };
+
+
+app.get('/userName', authenticateToken, async (request, response) => {
+    let {email} =request;
+    console.log(email)
+    try {
+        const getData = await UserData.find({email: email})
+        console.log(getData)
+        response.send(getData)
+    }
+    catch (err) {
+        response.send(err.message)
+    }
+})
+
+
+
 
 app.listen(process.env.PORT || 3008, () => console.log('port running '))
 
